@@ -1,45 +1,81 @@
+#! /usr/bin/python
 import readCsv
 import zabbix
 
 file_csv = 'hosts.csv'
 criar_grupo = ""
-id_grupo = ""
+grupos = ""
+associar_template = ""
+templates = []
 
-
-""" Logar no zabbix """
+# Logar no zabbix
 AUTHTOKEN = zabbix.login()
 
+# Ler arquivo csv
+hosts = readCsv.getHosts(file_csv)
 
-""" Ler arquivo csv """
-hosts = readCsv.getHosts(f"./{file_csv}")
-
-
-""" Criar grupo ? """
+# Criar grupo ?
 while criar_grupo == "":
-    criar_grupo = (input('Criar novo grupo? S | N : ').upper())
+    criar_grupo = (input('Criar novo grupo? S | N: ').upper())
 
-
-""" Criar grupo """
+# Criar grupo
 if criar_grupo == 'S':
-    while id_grupo == "":
+    while grupos == "":
         nome_grupo = (input('Qual o nome do novo grupo?: '))
         res = zabbix.criarGrupo(AUTHTOKEN, nome_grupo)
         if 'error' in res:
             print(f'\nErro: {res["error"]["data"]}\n')
         else:
-            id_grupo = res['result']['groupids'][0]
-            print(f'\nO grupo "{nome_grupo}" com ID "{id_grupo}" foi criado\n')
+            grupos = res['result']['groupids'][0]
+            print(f'\nO grupo "{nome_grupo}" com ID "{grupos}" foi criado\n')
 
-""" Listar Grupos existentes """
+# Listar Grupos existentes
 if criar_grupo == 'N':
-    while id_grupo == "":
+    while grupos == "":
         grupos = zabbix.getGroups(AUTHTOKEN)
         for grupo in grupos['result']:
             print(f'{grupo["groupid"]} => {grupo["name"]}')
-        id_grupo = input('\nInsira o ID do Grupo: ')
-        print(f'\nGrupo: {id_grupo}\n')
+        grupos = input('\nInsira o ID do Grupo: ')
+        print(f'\nGrupo: {grupos}\n')
 
-print(hosts)
+# Associar a template existente?
+while associar_template == "":
+    associar_template = (
+        input('\nAssociar a um template existente? S | N : ').upper())
 
-""" Deslogar """
+# Se associar a um template, SIM
+if associar_template == 'S':
+    res = zabbix.getTemplates(AUTHTOKEN)
+    for i in res['result']:
+        print(f'{i["templateid"]} => {i["name"]}')
+    while templates == []:
+        x = str(input(
+            '\nInsira o ID do Template. \nSe for escolher mais de um, separe por virgula: '))
+        if ',' in x:
+            xs = x.split(',')
+            for i in xs:
+                templates.append({'templateid': i})
+        else:
+            templates.append({'templateid': x})
+
+    print('\n', templates)
+
+# Se associar a um template, NAO
+if associar_template == 'N':
+    templates = []
+
+# Criar hosts
+for host in hosts:
+    zabbix.criarHosts(
+        AUTHTOKEN,
+        host['nome'],
+        host['ip'],
+        host['{$SNMP_COMMUNITY}'],
+        host['tipo'],
+        host['porta'],
+        templates,
+        grupos
+    )
+
+# Deslogar
 zabbix.logout(AUTHTOKEN)
