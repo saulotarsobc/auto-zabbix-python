@@ -67,15 +67,7 @@ if associar_template == 'N':
 # Criar hosts
 for host in hosts:
     zabbix.criarHosts(
-        AUTHTOKEN,
-        host['nome'],
-        host['ip'],
-        host['{$SNMP_COMMUNITY}'],
-        host['tipo'],
-        host['porta'],
-        templates,
-        grupos
-    )
+        AUTHTOKEN, host['nome'], host['ip'], host['{$SNMP_COMMUNITY}'], host['tipo'], host['porta'], templates, grupos)
 
 # Deslogar
 zabbix.logout(AUTHTOKEN)

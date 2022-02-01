@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+from unicodedata import name
 import requests
 import json
 
@@ -15,8 +16,6 @@ config.read('./config.ini')
 url = config.get('auth', 'url')
 user = config.get('auth', 'user')
 password = config.get('auth', 'password')
-
-interfaces_types = "1 => agent\n2 => SNMP\n3 => IPMI\n4 => JMX"
 
 
 def login():
@@ -129,7 +128,7 @@ def criarHosts(AUTHTOKEN, nome, ip, snmp_c, tipo_interface, port_interface, temp
             "id": 5
         })
         res = r.json()
-        print(res)
+        print(f'Host "{nome}" => {res}')
     except Exception:
         print(f"\nerror\n")
 
