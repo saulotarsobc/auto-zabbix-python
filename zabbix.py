@@ -18,21 +18,28 @@ user = config.get('auth', 'user')
 password = config.get('auth', 'password')
 
 
-def login():
-    try:
-        r = requests.post(url, json={
-            "jsonrpc": "2.0",
-            "method": "user.login",
-            "params": {
-                "user": user,
-                "password": password},
-            "id": 1
-        })
-        AUTHTOKEN = r.json()["result"]
-        print(f"\n>>>>>>>>>> Login: {AUTHTOKEN}\n")
-        return AUTHTOKEN
-    except Exception:
-        print(f"Nao consegui logar")
+def login(tipo_de_login):
+    if tipo_de_login == 1:
+        try:
+            r = requests.post(url, json={
+                "jsonrpc": "2.0",
+                "method": "user.login",
+                "params": {
+                    "user": user,
+                    "password": password},
+                "id": 1
+            })
+            AUTHTOKEN = r.json()["result"]
+            print(f"\nLogado com Usuario e Senha\n")
+            print(f"\n>>>>>>>>>> Login: {AUTHTOKEN}\n")
+            return AUTHTOKEN
+        except Exception:
+            print(f"Nao consegui logar")
+    else:
+        token = config.get('auth', 'token')
+        print(f"\nLogado via API Token\n")
+        print(f"\n>>>>>>>>>> Login: {token}\n")
+        return token
 
 
 def criarGrupo(AUTHTOKEN, nome_grupo):
@@ -128,16 +135,29 @@ def criarHosts(AUTHTOKEN, nome, ip, snmp_c, tipo_interface, port_interface, temp
             "id": 5
         })
         res = r.json()
-        print(f'Host "{nome}" => {res}')
+        if 'error' in res:
+            print(
+                f'Host {nome} => { json.dumps(r.json()["error"]["data"]) }')
+        else:
+            print(
+                f'Host "{nome}" => Criado com o ID { json.dumps(r.json()["result"]["hostids"]) }')
     except Exception:
         print(f"\nerror\n")
 
 
-def logout(AUTHTOKEN):
-    if (AUTHTOKEN):
+def logout(AUTHTOKEN, tipo_de_login):
+    if tipo_de_login == 1:
         try:
-            r = requests.post(url, json={"jsonrpc": "2.0", "method": "user.logout", "params": {
-            }, "id": 100, "auth": AUTHTOKEN})
-            print(f"\n>>>>>>>>>> Logout: {json.dumps(r.json()['result'])}")
+            r = requests.post(url, json={
+                "jsonrpc": "2.0",
+                "params": {},
+                "method": "user.logout",
+                "id": 100,
+                "auth": AUTHTOKEN
+            })
+            print(f"\n>>>>>>>>>> Logout: {json.dumps(r.json()['result'])}\n")
+            print(f"Fim da aplicação\n")
         except Exception as err:
-            print("logout: ", err)
+            print(f"\nlogout: ", err)
+    else:
+        print(f"\nFim da aplicação\n")

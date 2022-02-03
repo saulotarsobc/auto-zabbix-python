@@ -2,6 +2,13 @@
 import readCsv
 import zabbix
 
+"""
+[tipo de login]
+1 = usuario e senha
+2 = api token
+"""
+tipo_de_login = 2
+
 file_csv = 'hosts.csv'
 criar_grupo = ""
 grupos = ""
@@ -9,14 +16,14 @@ associar_template = ""
 templates = []
 
 # Logar no zabbix
-AUTHTOKEN = zabbix.login()
+AUTHTOKEN = zabbix.login(tipo_de_login)
 
 # Ler arquivo csv
 hosts = readCsv.getHosts(file_csv)
 
 # Criar grupo ?
 while criar_grupo == "":
-    criar_grupo = (input('Criar novo grupo? S | N: ').upper())
+    criar_grupo = (input('\nCriar novo grupo? S | N: ').upper())
 
 # Criar grupo
 if criar_grupo == 'S':
@@ -33,10 +40,14 @@ if criar_grupo == 'S':
 if criar_grupo == 'N':
     while grupos == "":
         grupos = zabbix.getGroups(AUTHTOKEN)
-        for grupo in grupos['result']:
-            print(f'{grupo["groupid"]} => {grupo["name"]}')
-        grupos = input('\nInsira o ID do Grupo: ')
-        print(f'\nGrupo: {grupos}\n')
+        if 'error' in grupos:
+            print(f'\nFalha ao listar os grupos. Saindo...\n')
+            exit()
+        else:
+            for grupo in grupos['result']:
+                print(f'{grupo["groupid"]} => {grupo["name"]}')
+            grupos = input('\nInsira o ID do Grupo: ')
+            print(f'\nGrupo: {grupos}\n')
 
 # Associar a template existente?
 while associar_template == "":
@@ -70,4 +81,4 @@ for host in hosts:
         AUTHTOKEN, host['nome'], host['ip'], host['{$SNMP_COMMUNITY}'], host['tipo'], host['porta'], templates, grupos)
 
 # Deslogar
-zabbix.logout(AUTHTOKEN)
+zabbix.logout(AUTHTOKEN, tipo_de_login)
