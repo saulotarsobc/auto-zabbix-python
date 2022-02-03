@@ -2,6 +2,8 @@
 
 > Automação de cadastros de hosts no Zabbix a partir de uma lista em CSV. Possibilidade de logar com Usuário e Senha ou via Token API.
 
+[Saulo Costa - Telegram](https://t.me/saulos2costa)
+
 ---
 
 ## Video
