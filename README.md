@@ -38,6 +38,15 @@ Teste Via Api 04,10.10.10.4,2,21323fgserwt4t,161
 
 ## Python
 
+### Libs
+
+```sh
+csv
+requests
+json
+configparser
+```
+
 > Altere a váriavel **'tipo_de_login'** para **1** caso queira logar via *Usuário* e *Senha* ou **2** para logar via *Token*.
 
 ```py

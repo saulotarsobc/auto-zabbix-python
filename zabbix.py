@@ -1,5 +1,4 @@
 from configparser import ConfigParser
-from unicodedata import name
 import requests
 import json
 
