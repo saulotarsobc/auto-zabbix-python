@@ -12,6 +12,12 @@
 
 ---
 
+## Planilha
+
+### [Planilha Modelo no Google Sheets](https://docs.google.com/spreadsheets/d/1NF_jYHkpOeWr0ufGTdNrESZNb2gQDtuPD6Xc6Mi2do4)
+
+---
+
 ## config.ini
 
 > Nesse arquivo você configura as credenciais de acesso ao seu Zabbix.
