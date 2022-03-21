@@ -6,6 +6,12 @@
 
 ---
 
+## Apoio
+
+[LIVE - Automatizando cadastro de Hosts automáticos utilizando API do Zabbix](https://youtu.be/geCC8TupE8w)
+
+---
+
 ## Video
 
 ### [Automatizando cadastros de Hosts no Zabbix com Python](https://youtu.be/ZmQtVOMZ7EQ)
