@@ -33,7 +33,7 @@ def login(tipo_de_login):
             print(f"\n>>>>>>>>>> Login: {AUTHTOKEN}\n")
             return AUTHTOKEN
         except Exception:
-            print(f"Nao consegui logar")
+            exit(f"Nao consegui logar")
     else:
         token = config.get('auth', 'token')
         print(f"\nLogado via API Token\n")
