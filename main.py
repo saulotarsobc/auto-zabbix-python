@@ -7,7 +7,8 @@ import zabbix
 1 = usuario e senha
 2 = api token
 """
-tipo_de_login = 2
+
+tipo_de_login = 1
 
 file_csv = 'hosts.csv'
 criar_grupo = ""
