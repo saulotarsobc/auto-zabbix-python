@@ -1,14 +1,14 @@
 #! /usr/bin/python
 import readCsv
 import zabbix
+import threading
 
 """
 [tipo de login]
 1 = usuario e senha
 2 = api token
 """
-
-tipo_de_login = 1
+tipo_de_login = 2
 
 file_csv = 'hosts.csv'
 criar_grupo = ""
@@ -78,8 +78,7 @@ if associar_template == 'N':
 
 # Criar hosts
 for host in hosts:
-    zabbix.criarHosts(
-        AUTHTOKEN, host['nome'], host['ip'], host['{$SNMP_COMMUNITY}'], host['tipo'], host['porta'], templates, grupos)
+    threading.Thread(target=zabbix.criarHosts, args=(AUTHTOKEN, host['nome'], host['ip'], host['{$SNMP_COMMUNITY}'], host['tipo'], host['porta'], templates, grupos)).start()
 
 # Deslogar
 zabbix.logout(AUTHTOKEN, tipo_de_login)

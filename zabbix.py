@@ -97,6 +97,7 @@ def getTemplates(AUTHTOKEN):
 
 
 def criarHosts(AUTHTOKEN, nome, ip, snmp_c, tipo_interface, port_interface, templates, id_grupo):
+    # print(AUTHTOKEN, nome, ip, snmp_c, tipo_interface, port_interface, templates, id_grupo)
     try:
         r = requests.post(url, json={
             "jsonrpc": "2.0",
@@ -155,8 +156,8 @@ def logout(AUTHTOKEN, tipo_de_login):
                 "auth": AUTHTOKEN
             })
             print(f"\n>>>>>>>>>> Logout: {json.dumps(r.json()['result'])}\n")
-            print(f"Fim da aplicação\n")
+            # print(f"Fim da aplicação\n")
         except Exception as err:
             print(f"\nlogout: ", err)
-    else:
-        print(f"\nFim da aplicação\n")
+    # else:
+        # print(f"\nFim da aplicação\n")
