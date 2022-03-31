@@ -11,9 +11,9 @@ import threading
 tipo_de_login = 2
 
 file_csv = 'hosts.csv'
-criar_grupo = ""
-grupos = ""
-associar_template = ""
+criar_grupo = "N"
+grupos = "98"
+associar_template = "N"
 templates = []
 
 # Logar no zabbix
@@ -78,7 +78,8 @@ if associar_template == 'N':
 
 # Criar hosts
 for host in hosts:
-    threading.Thread(target=zabbix.criarHosts, args=(AUTHTOKEN, host['nome'], host['ip'], host['{$SNMP_COMMUNITY}'], host['tipo'], host['porta'], templates, grupos)).start()
+    threading.Thread(target=zabbix.criarHosts, args=(
+        AUTHTOKEN, host['nome'], host['ip'], host['{$SNMP_COMMUNITY}'], host['tipo'], host['porta'], templates, grupos)).start()
 
 # Deslogar
 zabbix.logout(AUTHTOKEN, tipo_de_login)
