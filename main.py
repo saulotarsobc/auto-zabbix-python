@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! python3
 import readCsv
 import zabbix
 import threading
@@ -8,12 +8,12 @@ import threading
 1 = usuario e senha
 2 = api token
 """
-tipo_de_login = 2
+tipo_de_login = 1
 
 file_csv = 'hosts.csv'
 criar_grupo = "N"
-grupos = "98"
-associar_template = "N"
+grupos = "4"
+associar_template = "S"
 templates = []
 
 # Logar no zabbix
@@ -52,8 +52,7 @@ if criar_grupo == 'N':
 
 # Associar a template existente?
 while associar_template == "":
-    associar_template = (
-        input('\nAssociar a um template existente? S | N : ').upper())
+    associar_template = (input('\nAssociar a um template existente? S | N : ').upper())
 
 # Se associar a um template, SIM
 if associar_template == 'S':
@@ -71,6 +70,7 @@ if associar_template == 'S':
             templates.append({'templateid': x})
 
     print('\n', templates)
+    exit()
 
 # Se associar a um template, NAO
 if associar_template == 'N':
@@ -78,8 +78,10 @@ if associar_template == 'N':
 
 # Criar hosts
 for host in hosts:
-    threading.Thread(target=zabbix.criarHosts, args=(
-        AUTHTOKEN, host['nome'], host['ip'], host['{$SNMP_COMMUNITY}'], host['tipo'], host['porta'], templates, grupos)).start()
+    """ threading.Thread(target=zabbix.criarHosts, args=(
+        AUTHTOKEN, host['nome'], host['dns'], host['tipo'], host['porta'], templates, grupos)).start() """
+    zabbix.criarHosts(AUTHTOKEN, host['nome'], host['dns'],
+                      host['tipo'], host['porta'], templates, grupos)
 
 # Deslogar
 zabbix.logout(AUTHTOKEN, tipo_de_login)

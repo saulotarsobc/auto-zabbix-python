@@ -96,7 +96,7 @@ def getTemplates(AUTHTOKEN):
         print(f"\nerror\n")
 
 
-def criarHosts(AUTHTOKEN, nome, ip, snmp_c, tipo_interface, port_interface, templates, id_grupo):
+def criarHosts(AUTHTOKEN, nome, dns, tipo_interface, port_interface, templates, id_grupo):
     # print(AUTHTOKEN, nome, ip, snmp_c, tipo_interface, port_interface, templates, id_grupo)
     try:
         r = requests.post(url, json={
@@ -108,14 +108,10 @@ def criarHosts(AUTHTOKEN, nome, ip, snmp_c, tipo_interface, port_interface, temp
                     {
                         "type": tipo_interface,
                         "main": 1,
-                        "useip": 1,
-                        "ip": ip,
-                        "dns": "",
+                        "useip": 0,
+                        "ip": "",
+                        "dns": dns,
                         "port": port_interface,
-                        "details": {
-                            "version": 2,
-                            "community": "{$SNMP_COMMUNITY}",
-                        }
                     }
                 ],
                 "groups": [
@@ -124,12 +120,6 @@ def criarHosts(AUTHTOKEN, nome, ip, snmp_c, tipo_interface, port_interface, temp
                     }
                 ],
                 "templates": templates,
-                "macros": [
-                    {
-                        "macro": "{$SNMP_COMMUNITY}",
-                        "value": snmp_c
-                    }
-                ],
             },
             "auth": AUTHTOKEN,
             "id": 5
