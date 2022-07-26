@@ -70,7 +70,6 @@ if associar_template == 'S':
             templates.append({'templateid': x})
 
     print('\n', templates)
-    exit()
 
 # Se associar a um template, NAO
 if associar_template == 'N':
@@ -78,10 +77,9 @@ if associar_template == 'N':
 
 # Criar hosts
 for host in hosts:
-    """ threading.Thread(target=zabbix.criarHosts, args=(
-        AUTHTOKEN, host['nome'], host['dns'], host['tipo'], host['porta'], templates, grupos)).start() """
-    zabbix.criarHosts(AUTHTOKEN, host['nome'], host['dns'],
-                      host['tipo'], host['porta'], templates, grupos)
+    threading.Thread(target=zabbix.criarHosts, args=(
+        AUTHTOKEN, host['nome'], host['dns'], host['tipo'], host['porta'], templates, grupos)).start()
+    # zabbix.criarHosts(AUTHTOKEN, host['nome'], host['dns'], host['tipo'], host['porta'], templates, grupos)
 
 # Deslogar
 zabbix.logout(AUTHTOKEN, tipo_de_login)
